@@ -197,6 +197,104 @@
             animation-duration: 7s;
         }
 
+        /* Mensaje romántico expandido */
+        .love-message {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            color: #ffecb3;
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            text-align: center;
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.2),
+                inset 0 0 30px rgba(255, 215, 0, 0.1);
+            opacity: 0;
+            animation: messageAppear 4s ease-in 3s forwards;
+            z-index: 2;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .love-message::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .love-message::-webkit-scrollbar-track {
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .love-message::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.4);
+            border-radius: 4px;
+        }
+
+        .love-message p {
+            margin-bottom: 1.2rem;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+        }
+
+        .love-message strong {
+            color: #ffd700;
+            text-shadow: 0 0 10px #ffd700;
+        }
+
+        .love-message .signature {
+            margin-top: 2rem;
+            font-style: italic;
+            color: #ffd700;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+        }
+
+        @keyframes messageAppear {
+            0% { 
+                opacity: 0; 
+                transform: translateX(-50%) scale(0.8);
+            }
+            100% { 
+                opacity: 0.95; 
+                transform: translateX(-50%) scale(1);
+            }
+        }
+
+        /* Botón para mostrar/ocultar mensaje */
+        .toggle-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            z-index: 20;
+            backdrop-filter: blur(5px);
+        }
+
+        .toggle-message:hover {
+            background: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .love-message.hidden {
+            opacity: 0 !important;
+            pointer-events: none;
+            transform: translateX(-50%) scale(0.8) !important;
+        }
+
         /* Mensaje romántico */
         .message {
             position: absolute;
@@ -422,6 +520,25 @@
                 padding: 1rem;
             }
             
+            .title {
+                font-size: clamp(1.8rem, 6vw, 3rem);
+            }
+            
+            .love-message {
+                width: 95%;
+                padding: 1.5rem;
+                top: 15%;
+                max-height: 60vh;
+                font-size: 0.85rem;
+            }
+            
+            .toggle-message {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
             .flower {
                 width: 30px;
                 height: 30px;
@@ -489,10 +606,26 @@
     <!-- Estrellas de fondo -->
     <div class="stars"></div>
 
+    <!-- Botón para mostrar/ocultar mensaje -->
+    <button class="toggle-message" id="toggleMessage">💌 Leer Carta</button>
+
+    <!-- Mensaje de amor expandido -->
+    <div class="love-message hidden" id="loveMessage">
+        <p>En un rincón especial de mi corazón, tejo cada palabra con la luz de este 21 de septiembre, el día en que el amor se viste de celebración. Y en esta fecha, mi pensamiento más bonito y profundo es para ti, mi <strong>Pequeñita</strong>.</p>
+        
+        <p>La <strong>belleza</strong> que habita en ti no es solo la que ven mis ojos, es el brillo de tu alma, la sonrisa que ilumina mis días y la calidez de tu corazón que convierte lo ordinario en algo extraordinario. Eres, mi <strong>Belén</strong>, la prueba de que lo más <strong>hermoso</strong> del mundo no está en paisajes lejanos o tesoros escondidos, sino en la <strong>bonita</strong> realidad que es tenerte a mi lado.</p>
+        
+        <p>Eres el <strong>amor</strong> que le da color a mi vida, la melodía suave que me calma y la fuerza que me inspira. Cada momento contigo es un regalo, una confirmación de que el <strong>amor</strong> es más que una palabra: es el hogar que encontré en ti.</p>
+        
+        <p>Feliz día del amor, mi <strong>Beyecita</strong>. Que este mensaje te recuerde siempre lo mucho que te valoro y el universo de sentimientos <strong>bonitos</strong> que has creado en mí.</p>
+        
+        <p class="signature">Te amo con todo lo que soy. 💛</p>
+    </div>
+
     <!-- Título principal -->
     <div class="main-title">
-        <h1 class="title">BELENCITA</h1>
-        <p class="subtitle">Flores amarillas para ti ✨</p>
+        <h1 class="title">BELENCITA TE AMO DEMASIADO</h1>
+        <p class="subtitle">21 de Septiembre - Día del Amor ✨</p>
     </div>
 
     <!-- Flores flotantes -->
@@ -629,6 +762,25 @@
     </div>
 
     <script>
+        // Funcionalidad del botón de mensaje
+        function initToggleMessage() {
+            const toggleBtn = document.getElementById('toggleMessage');
+            const loveMessage = document.getElementById('loveMessage');
+            let isVisible = false;
+            
+            toggleBtn.addEventListener('click', function() {
+                if (isVisible) {
+                    loveMessage.classList.add('hidden');
+                    toggleBtn.textContent = '💌 Leer Carta';
+                    isVisible = false;
+                } else {
+                    loveMessage.classList.remove('hidden');
+                    toggleBtn.textContent = '✕ Cerrar';
+                    isVisible = true;
+                }
+            });
+        }
+
         // Funcionalidad del ramo interactivo
         function initBouquet() {
             const bouquet = document.getElementById('bouquet');
@@ -716,6 +868,7 @@
             createStars();
             addTouchInteractivity();
             initBouquet();
+            initToggleMessage();
         });
     </script>
 </body>
